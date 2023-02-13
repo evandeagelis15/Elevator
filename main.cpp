@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include <vector>
-#include <chrono>
 
 #define TIME_PER_FLOOR 10
 
