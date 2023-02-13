@@ -28,6 +28,11 @@
 *.lib
 
 # Executables
-*.exe
 *.out
 *.app
+
+# Visual Studio Files
+*.sln
+.vs/*
+x64/*
+ElevatorProject/*

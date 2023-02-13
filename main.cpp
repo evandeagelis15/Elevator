@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 #define TIME_PER_FLOOR 10
 
@@ -31,6 +32,10 @@ int SortFloorVisits()
     //Store the min and max
     const int min = FloorsToVisit.front();
     const int max = FloorsToVisit.back();
+
+    //Case for one entry
+    if (min == max)
+        return 0;
     
     int direction = ((start - min) - (max-start) )/ abs((start - min) - (max - start));
     
@@ -54,6 +59,7 @@ int SortFloorVisits()
         //Loop until both ends of the
         while (j>=0 && j <FloorsToVisit.size() && direction !=0 )
         {
+            cout << j << endl;
             PrioritizedFloors.push_back(FloorsToVisit[j]);
             j+=direction;
         }
@@ -63,7 +69,7 @@ int SortFloorVisits()
     }
     
     //if there is a shorter distance between starting floor and lowest floor go that way
-    if ((start - min) <= (max-start))
+    if (direction)
     {
         return ((start-min)*2 + (max-start))*TIME_PER_FLOOR;
     }
