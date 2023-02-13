@@ -21,7 +21,10 @@ std::vector<int> PrioritizedFloors = {};
 int SortFloorVisits()
 {
     //Store the starting floor
-    const int Start = FloorsToVisit.front();
+    const int start = FloorsToVisit.front();
+    
+    //Put in the first floor
+    PrioritizedFloors.push_back(FloorsToVisit[0]);
     
     //sort the floors from lowest to highest
     sort(FloorsToVisit.begin(), FloorsToVisit.end());
@@ -30,46 +33,45 @@ int SortFloorVisits()
     const int min =FloorsToVisit.front();
     const int max = FloorsToVisit.back();
     
+    int direction = ((start - min) - (max-start) )/ abs((start - min) - (max - start));
+    
     //Find the current index of the starting floor
     int StartIndex = 0;
     for (int i = 0; i<FloorsToVisit.size(); i++)
     {
-        if (FloorsToVisit[i] == Start)
+        if (FloorsToVisit[i] == start)
         {
             StartIndex = i;
             break;
         }
     }
+
+    //Loop through both halves of the list
+    for (int i = 0; i<2; i++)
+    {
+        //Start at index either side of the starting index
+        int j = StartIndex + direction;
+        
+        //Loop until both ends of the
+        while (j>=0 && j <FloorsToVisit.size())
+        {
+            PrioritizedFloors.push_back(FloorsToVisit[j]);
+            j+=direction;
+        }
+        
+        //Switch directions
+        direction *= -1;
+    }
     
     //if there is a shorter distance between starting floor and lowest floor go that way
-    if ((Start - min) <= (max-Start))
+    if ((start - min) <= (max-start))
     {
-        //Loop backwards adding the floors to the prioritized vector
-        for (int i = StartIndex; i>=0; i--)
-        {
-            PrioritizedFloors.push_back(FloorsToVisit[i]);
-        }
-        //loop forward to grab the remaining floors
-        for (int i = StartIndex + 1; i<FloorsToVisit.size(); i++)
-        {
-            PrioritizedFloors.push_back(FloorsToVisit[i]);
-        }
-        return (Start-min)*2*TIME_PER_FLOOR + (max-Start)*TIME_PER_FLOOR;
+        return ((start-min)*2 + (max-start))*TIME_PER_FLOOR;
     }
     //else go to the higher floors first
     else
     {
-        //Loop forward adding the floors to the prioritized vector
-        for (int i = StartIndex +1; i<FloorsToVisit.size(); i++)
-        {
-            PrioritizedFloors.push_back(FloorsToVisit[i]);
-        }
-        //loop backwards to grab the remaining floors
-        for (int i = StartIndex; i>=0; i--)
-        {
-            PrioritizedFloors.push_back(FloorsToVisit[i]);
-        }
-        return(Start-min)*TIME_PER_FLOOR + (max-Start)*TIME_PER_FLOOR*2;
+        return((start-min)+ (max-start)*2)*TIME_PER_FLOOR;
     }
 }
 
@@ -96,20 +98,16 @@ int main(int argc, const char * argv[]) {
         cerr<<"No input entered. Please pass floors numbers through command line."<<endl;
         return -1;
     }
+
     int TimeTaken = 0;
 
-    
     HandleInput(argc, argv);
-    auto start = chrono::high_resolution_clock::now();
     
     //if there are valid floors, sort visit order and calculate time
     if (FloorsToVisit.size()>0)
     {
         TimeTaken = SortFloorVisits();
     }
-    auto stop = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::nanoseconds>(stop - start);
-    cout << duration.count() << endl;
     
     //Output Time taken to travel and the order of floors
     cout<<TimeTaken<< " ";
