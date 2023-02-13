@@ -29,7 +29,7 @@ int SortFloorVisits()
     sort(FloorsToVisit.begin(), FloorsToVisit.end());
     
     //Store the min and max
-    const int min =FloorsToVisit.front();
+    const int min = FloorsToVisit.front();
     const int max = FloorsToVisit.back();
     
     int direction = ((start - min) - (max-start) )/ abs((start - min) - (max - start));
@@ -52,7 +52,7 @@ int SortFloorVisits()
         int j = StartIndex + direction;
         
         //Loop until both ends of the
-        while (j>=0 && j <FloorsToVisit.size())
+        while (j>=0 && j <FloorsToVisit.size() && direction !=0 )
         {
             PrioritizedFloors.push_back(FloorsToVisit[j]);
             j+=direction;
@@ -98,18 +98,15 @@ int main(int argc, const char * argv[]) {
         return -1;
     }
 
-    int TimeTaken = 0;
-
     HandleInput(argc, argv);
     
     //if there are valid floors, sort visit order and calculate time
     if (FloorsToVisit.size()>0)
     {
-        TimeTaken = SortFloorVisits();
+        cout << SortFloorVisits()<< " ";
     }
     
     //Output Time taken to travel and the order of floors
-    cout<<TimeTaken<< " ";
     for (auto itr : PrioritizedFloors)
     {
         cout<<itr<<", ";
